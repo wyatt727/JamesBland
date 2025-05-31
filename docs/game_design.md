@@ -2,7 +2,7 @@
 
 ## 1. Introduction & Core Concept
 
-James Bland: ACME Edition transforms a solo "presidential protection" concept into a competitive 2–6 player espionage game over local area network (LAN). The game embraces ACME-style cartoon traps including exploding pianos, spring-loaded anvils, jet-powered roller skates, and custard pie launchers. The tone is deliberately slapstick and over-the-top, drawing inspiration from classic cartoon spy scenarios.
+James Bland: ACME Edition transforms is a competitive 2–6 player espionage game over local area network (LAN). The game embraces ACME-style cartoon traps including exploding pianos, spring-loaded anvils, jet-powered roller skates, and custard pie launchers. The tone is deliberately slapstick and over-the-top, drawing inspiration from classic cartoon spy scenarios.
 
 Players take on the roles of competing secret agents, each equipped with an arsenal of cartoonish gadgets and schemes. The game combines strategic planning with psychological warfare, as players must anticipate their opponents' moves while deploying their own offensive and defensive measures.
 
