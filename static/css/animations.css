@@ -1,0 +1,128 @@
+/* =================================
+   JAMES BLAND: ACME EDITION - ANIMATIONS
+   Multi-frame animation sequences
+   ================================= */
+
+/* Piano Drop Animation */
+@keyframes piano-drop {
+    0% { background-image: url('../images/animations/piano_drop/frame_00.png'); }
+    8.33% { background-image: url('../images/animations/piano_drop/frame_01.png'); }
+    16.66% { background-image: url('../images/animations/piano_drop/frame_02.png'); }
+    25% { background-image: url('../images/animations/piano_drop/frame_03.png'); }
+    33.33% { background-image: url('../images/animations/piano_drop/frame_04.png'); }
+    41.66% { background-image: url('../images/animations/piano_drop/frame_05.png'); }
+    50% { background-image: url('../images/animations/piano_drop/frame_06.png'); }
+    58.33% { background-image: url('../images/animations/piano_drop/frame_07.png'); }
+    66.66% { background-image: url('../images/animations/piano_drop/frame_08.png'); }
+    75% { background-image: url('../images/animations/piano_drop/frame_09.png'); }
+    83.33% { background-image: url('../images/animations/piano_drop/frame_10.png'); }
+    100% { background-image: url('../images/animations/piano_drop/frame_11.png'); }
+}
+
+.piano-drop-animation {
+    width: 64px;
+    height: 64px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    animation: piano-drop 1s ease-in-out;
+}
+
+/* Anvil Bounce Animation */
+@keyframes anvil-bounce {
+    0% { background-image: url('../images/animations/anvil_bounce/frame_00.png'); }
+    11.11% { background-image: url('../images/animations/anvil_bounce/frame_01.png'); }
+    22.22% { background-image: url('../images/animations/anvil_bounce/frame_02.png'); }
+    33.33% { background-image: url('../images/animations/anvil_bounce/frame_03.png'); }
+    44.44% { background-image: url('../images/animations/anvil_bounce/frame_04.png'); }
+    55.55% { background-image: url('../images/animations/anvil_bounce/frame_05.png'); }
+    66.66% { background-image: url('../images/animations/anvil_bounce/frame_06.png'); }
+    77.77% { background-image: url('../images/animations/anvil_bounce/frame_07.png'); }
+    88.88% { background-image: url('../images/animations/anvil_bounce/frame_08.png'); }
+    100% { background-image: url('../images/animations/anvil_bounce/frame_09.png'); }
+}
+
+.anvil-bounce-animation {
+    width: 64px;
+    height: 64px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    animation: anvil-bounce 0.8s ease-out;
+}
+
+/* Custard Pie Splash Animation */
+@keyframes custard-pie-splash {
+    0% { background-image: url('../images/animations/custard_pie_splash/frame_00.png'); }
+    14.28% { background-image: url('../images/animations/custard_pie_splash/frame_01.png'); }
+    28.56% { background-image: url('../images/animations/custard_pie_splash/frame_02.png'); }
+    42.84% { background-image: url('../images/animations/custard_pie_splash/frame_03.png'); }
+    57.12% { background-image: url('../images/animations/custard_pie_splash/frame_04.png'); }
+    71.4% { background-image: url('../images/animations/custard_pie_splash/frame_05.png'); }
+    85.68% { background-image: url('../images/animations/custard_pie_splash/frame_06.png'); }
+    100% { background-image: url('../images/animations/custard_pie_splash/frame_07.png'); }
+}
+
+.custard-pie-splash-animation {
+    width: 64px;
+    height: 64px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    animation: custard-pie-splash 0.6s ease-in-out;
+}
+
+/* Explosion Animation */
+@keyframes explosion {
+    0% { background-image: url('../images/animations/explosion/frame_00.png'); }
+    11.11% { background-image: url('../images/animations/explosion/frame_01.png'); }
+    22.22% { background-image: url('../images/animations/explosion/frame_02.png'); }
+    33.33% { background-image: url('../images/animations/explosion/frame_03.png'); }
+    44.44% { background-image: url('../images/animations/explosion/frame_04.png'); }
+    55.55% { background-image: url('../images/animations/explosion/frame_05.png'); }
+    66.66% { background-image: url('../images/animations/explosion/frame_06.png'); }
+    77.77% { background-image: url('../images/animations/explosion/frame_07.png'); }
+    88.88% { background-image: url('../images/animations/explosion/frame_08.png'); }
+    100% { background-image: url('../images/animations/explosion/frame_09.png'); }
+}
+
+.explosion-animation {
+    width: 64px;
+    height: 64px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    animation: explosion 0.8s ease-out;
+}
+
+/* Utility Classes */
+.animation-container {
+    display: inline-block;
+    position: relative;
+}
+
+.animation-once {
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+.animation-loop {
+    animation-iteration-count: infinite;
+}
+
+/* Animation trigger classes for JavaScript */
+.trigger-piano-drop {
+    animation-name: piano-drop;
+}
+
+.trigger-anvil-bounce {
+    animation-name: anvil-bounce;
+}
+
+.trigger-custard-pie-splash {
+    animation-name: custard-pie-splash;
+}
+
+.trigger-explosion {
+    animation-name: explosion;
+}

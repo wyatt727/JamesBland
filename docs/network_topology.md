@@ -135,7 +135,7 @@ def is_lan_connection(client_ip, server_ip):
 **Input Sanitization**
 - All client input validated and sanitized
 - Codenames: alphanumeric + spaces only, 3-15 characters
-- Banner messages: plain text only, 25 character limit
+- Banner messages: plain text only, 50 character limit
 - No executable code accepted from clients
 
 **Session Management**

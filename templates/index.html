@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>James Bland: ACME Edition</title>
+    
+    <!-- Font Loading with improved fallbacks -->
+    <style>
+        @font-face {
+            font-family: 'ACMECartoon';
+            src: url('/static/fonts/acme_cartoon.ttf') format('truetype');
+            font-weight: bold;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'MonospaceConsole';
+            src: url('/static/fonts/monospace_console.ttf') format('truetype');
+            font-weight: normal;
+            font-display: swap;
+        }
+        
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            :root {
+                --color-primary-red: #FF0000;
+                --color-primary-blue: #0000FF;
+                --color-black: #000000;
+                --color-white: #FFFFFF;
+            }
+        }
+        
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* Focus indicators for accessibility */
+        .focus-visible {
+            outline: 3px solid #1E88E5;
+            outline-offset: 2px;
+        }
+    </style>
+    
+    <!-- Performance optimization preloads -->
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    
+    <!-- Socket.IO CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js"></script>
+</head>
+<body>
+    <!-- Skip link for keyboard navigation -->
+    <a href="#main-content" class="skip-link sr-only">Skip to main content</a>
+    
+    <!-- Live region for screen reader announcements -->
+    <div id="sr-announcements" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+    
+    <!-- Lobby UI Container -->
+    <main id="main-content">
+        <div id="overlay-lobby" class="overlay active" role="main" aria-label="Game lobby">
+            <div class="lobby-container">
+                <header class="game-header" role="banner">
+                    <h1 class="game-title">James Bland: ACME Edition</h1>
+                    <p class="game-subtitle">Mobile Espionage for 2-6 Players</p>
+                </header>
+                
+                <section class="lobby-content" aria-label="Join game controls">
+                    <div class="join-section">
+                        <label for="input-codename" class="input-label">Agent Codename <span class="required" aria-label="required">*</span></label>
+                        <input 
+                            type="text" 
+                            id="input-codename" 
+                            class="codename-input" 
+                            maxlength="16" 
+                            placeholder="Enter your codename..."
+                            autocomplete="off"
+                            aria-describedby="codename-help"
+                            aria-required="true"
+                        >
+                        <div id="codename-help" class="help-text">Enter a unique codename up to 16 characters</div>
+                        <button id="btn-join" class="btn btn-primary" aria-describedby="join-status">
+                            <span class="btn-text">JOIN MISSION</span>
+                            <span class="btn-loading hidden" aria-hidden="true">Joining...</span>
+                        </button>
+                    </div>
+                    
+                    <div id="lobby-status" class="status-messages" role="status" aria-live="polite">
+                        <p class="status-text">Enter your agent codename to join the mission.</p>
+                    </div>
+                    
+                    <section class="player-list-container" aria-label="Active players">
+                        <h2 class="section-title">Active Agents</h2>
+                        <div id="player-list-lobby" class="player-list scrollable" 
+                             role="list" 
+                             aria-label="List of players currently in the lobby"
+                             aria-live="polite">
+                            <!-- Player list items will be dynamically added here -->
+                        </div>
+                    </section>
+                    
+                    <div class="host-controls" role="region" aria-label="Host controls">
+                        <button id="btn-start" class="btn btn-success" disabled aria-describedby="start-help">
+                            <span class="btn-text">START MISSION</span>
+                            <span class="btn-loading hidden" aria-hidden="true">Starting...</span>
+                        </button>
+                        <p id="start-help" class="host-note">Host controls - minimum 2 players required</p>
+                    </div>
+                </section>
+            </div>
+        </div>
+        
+        <!-- Game UI Container -->
+        <div id="overlay-game" class="overlay hidden" role="main" aria-label="Game interface">
+            <!-- HUD - Horizontally Scrollable Player Status Bar -->
+            <nav id="hud" class="hud" role="navigation" aria-label="Player status display">
+                <div class="hud-container" role="list" aria-label="Player status panels">
+                    <!-- Player status panels will be dynamically added here -->
+                </div>
+            </nav>
+            
+            <!-- Board/Background Display Area -->
+            <div id="board" class="board" role="img" aria-label="Game board background">
+                <div class="board-background"></div>
+            </div>
+            
+            <!-- Planning Phase UI -->
+            <section id="planning-ui" class="planning-panel" role="region" aria-label="Planning phase controls">
+                <header class="planning-header">
+                    <h2 class="phase-title">Planning Phase</h2>
+                    <div id="timer-display" class="timer" 
+                         role="timer" 
+                         aria-live="off" 
+                         aria-label="Time remaining in seconds">90</div>
+                </header>
+                
+                <div class="planning-content">
+                    <fieldset class="action-selection" aria-label="Action selection">
+                        <legend class="sr-only">Choose your actions for this round</legend>
+                        
+                        <div class="selection-group">
+                            <label for="select-offense" class="selection-label">
+                                Offensive Operation 
+                                <span class="required" aria-label="required">*</span>
+                            </label>
+                            <select id="select-offense" 
+                                    class="action-select" 
+                                    aria-describedby="offense-help"
+                                    aria-required="true">
+                                <option value="">Select your offense...</option>
+                                <!-- Options will be dynamically populated -->
+                            </select>
+                            <div id="offense-help" class="help-text">Choose your offensive action for this turn</div>
+                        </div>
+                        
+                        <div class="selection-group">
+                            <label for="select-defense" class="selection-label">
+                                Defensive Measure 
+                                <span class="required" aria-label="required">*</span>
+                            </label>
+                            <select id="select-defense" 
+                                    class="action-select" 
+                                    aria-describedby="defense-help"
+                                    aria-required="true">
+                                <option value="">Select your defense...</option>
+                                <!-- Options will be dynamically populated -->
+                            </select>
+                            <div id="defense-help" class="help-text">Choose your defensive action for this turn</div>
+                        </div>
+                        
+                        <div class="selection-group">
+                            <label for="select-target" class="selection-label">
+                                Target Agent 
+                                <span class="required" aria-label="required">*</span>
+                            </label>
+                            <select id="select-target" 
+                                    class="action-select" 
+                                    aria-describedby="target-help"
+                                    aria-required="true">
+                                <option value="">Select target...</option>
+                                <!-- Options will be dynamically populated -->
+                            </select>
+                            <div id="target-help" class="help-text">Choose which player to target with your offensive action</div>
+                        </div>
+                    </fieldset>
+                    
+                    <fieldset class="resource-management" aria-label="Resource allocation">
+                        <legend class="sr-only">Allocate your intelligence points</legend>
+                        
+                        <div class="ip-allocation">
+                            <label for="input-ip" class="resource-label">Intelligence Points to Spend</label>
+                            <div class="ip-controls">
+                                <input 
+                                    type="range" 
+                                    id="input-ip" 
+                                    class="ip-slider" 
+                                    min="0" 
+                                    max="10" 
+                                    value="0"
+                                    aria-describedby="ip-help"
+                                    aria-valuemin="0"
+                                    aria-valuemax="10"
+                                    aria-valuenow="0"
+                                    aria-valuetext="0 intelligence points"
+                                >
+                                <span id="ip-display" class="ip-value" aria-live="polite">0</span>
+                                <span class="ip-max">/ <span id="ip-available">0</span></span>
+                            </div>
+                            <div id="ip-help" class="help-text">Spend intelligence points to increase your action's effectiveness</div>
+                        </div>
+                        
+                        <div class="banner-section hidden" id="banner-section" aria-label="Banner message input">
+                            <label for="input-banner" class="resource-label">
+                                Biplane Banner Message
+                                <span class="optional" aria-label="optional">(optional)</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="input-banner" 
+                                class="banner-input" 
+                                maxlength="50" 
+                                placeholder="Your propaganda message..."
+                                aria-describedby="banner-help banner-count"
+                            >
+                            <div id="banner-help" class="help-text">Enter a message to display on your biplane banner</div>
+                            <span id="banner-count" class="char-count" aria-live="polite">0/50</span>
+                        </div>
+                    </fieldset>
+                    
+                    <div class="submission-controls">
+                        <button id="btn-submit-turn" class="btn btn-primary btn-large" aria-describedby="submit-help">
+                            <span class="btn-text">SUBMIT TURN</span>
+                            <span class="btn-loading hidden" aria-hidden="true">Submitting...</span>
+                        </button>
+                        <div id="submit-help" class="help-text">Submit your actions for this planning phase</div>
+                        <div id="submission-status" class="submission-feedback hidden" role="status" aria-live="polite">
+                            <span class="status-icon" aria-hidden="true">✓</span>
+                            <span class="status-text">Turn submitted successfully!</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Resolution Phase UI -->
+            <section id="resolution" class="resolution-panel hidden" role="region" aria-label="Turn resolution results">
+                <header class="resolution-header">
+                    <h2 class="phase-title">Resolution Phase</h2>
+                </header>
+                
+                <div id="resolution-content" class="resolution-content" 
+                     role="log" 
+                     aria-live="polite" 
+                     aria-label="Turn resolution results">
+                    <!-- Resolution results will be dynamically populated here -->
+                </div>
+                
+                <div class="resolution-controls">
+                    <button id="btn-continue" class="btn btn-primary btn-large" aria-describedby="continue-help">
+                        <span class="btn-text">CONTINUE TO NEXT ROUND</span>
+                        <span class="btn-loading hidden" aria-hidden="true">Loading...</span>
+                    </button>
+                    <div id="continue-help" class="help-text">Proceed to the next planning phase</div>
+                </div>
+            </section>
+            
+            <!-- Banner Choice Modal -->
+            <div id="banner-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="banner-modal-title">
+                <div class="modal-content">
+                    <header class="modal-header">
+                        <h3 id="banner-modal-title">Biplane Banner Message</h3>
+                    </header>
+                    <div class="modal-body">
+                        <p class="banner-message" id="banner-message-text"></p>
+                        <p class="banner-question">Do you believe this message?</p>
+                    </div>
+                    <div class="modal-actions" role="group" aria-label="Banner response options">
+                        <button id="btn-believe" class="btn btn-success" aria-describedby="believe-help">
+                            <span class="btn-text">BELIEVE</span>
+                            <span class="btn-loading hidden" aria-hidden="true">Processing...</span>
+                        </button>
+                        <button id="btn-ignore" class="btn btn-danger" aria-describedby="ignore-help">
+                            <span class="btn-text">IGNORE</span>
+                            <span class="btn-loading hidden" aria-hidden="true">Processing...</span>
+                        </button>
+                    </div>
+                    <div id="believe-help" class="help-text sr-only">Choose to believe the banner message</div>
+                    <div id="ignore-help" class="help-text sr-only">Choose to ignore the banner message</div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Connection Status Indicator -->
+    <aside id="connection-status" class="connection-indicator" role="complementary" aria-label="Connection status">
+        <span class="status-dot connected" aria-hidden="true"></span>
+        <span class="status-text">Connected</span>
+        <span class="sr-only" id="connection-details">WebSocket connection is active</span>
+    </aside>
+    
+    <!-- Audio Elements for Preloading -->
+    <div class="audio-container" aria-hidden="true">
+        <audio id="audio-anvil" preload="metadata" aria-label="Anvil drop sound effect">
+            <source src="/static/audio/sfx/anvil_drop.mp3" type="audio/mpeg">
+            <p>Your browser does not support audio playback.</p>
+        </audio>
+        <audio id="audio-piano" preload="metadata" aria-label="Piano launch sound effect">
+            <source src="/static/audio/sfx/piano_launch.mp3" type="audio/mpeg">
+            <p>Your browser does not support audio playback.</p>
+        </audio>
+        <audio id="audio-explosion" preload="metadata" aria-label="Explosion sound effect">
+            <source src="/static/audio/sfx/explosion_sizzle.mp3" type="audio/mpeg">
+            <p>Your browser does not support audio playback.</p>
+        </audio>
+        <audio id="audio-suspense" loop preload="metadata" aria-label="Background suspense music">
+            <source src="/static/audio/music/suspense_loop.mp3" type="audio/mpeg">
+            <p>Your browser does not support audio playback.</p>
+        </audio>
+        <audio id="audio-victory" preload="metadata" aria-label="Victory fanfare music">
+            <source src="/static/audio/music/victory_fanfare.mp3" type="audio/mpeg">
+            <p>Your browser does not support audio playback.</p>
+        </audio>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="/static/js/performance_optimizer.js"></script>
+    <script src="/static/js/app.js"></script>
+    
+    <!-- Accessibility enhancements script -->
+    <script>
+        // Accessibility utilities
+        class AccessibilityManager {
+            constructor() {
+                this.setupFocusManagement();
+                this.setupScreenReaderAnnouncements();
+                this.setupKeyboardNavigation();
+                this.setupHighContrastSupport();
+            }
+            
+            setupFocusManagement() {
+                // Focus management for modals
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        const modal = document.querySelector('.modal:not(.hidden)');
+                        if (modal) {
+                            this.closeModal(modal);
+                        }
+                    }
+                });
+                
+                // Focus visible polyfill
+                document.addEventListener('keydown', () => {
+                    document.body.classList.add('using-keyboard');
+                });
+                
+                document.addEventListener('mousedown', () => {
+                    document.body.classList.remove('using-keyboard');
+                });
+            }
+            
+            setupScreenReaderAnnouncements() {
+                window.announceToScreenReader = (message, priority = 'polite') => {
+                    const announcer = document.getElementById('sr-announcements');
+                    announcer.setAttribute('aria-live', priority);
+                    announcer.textContent = message;
+                    
+                    // Clear after announcement
+                    setTimeout(() => {
+                        announcer.textContent = '';
+                    }, 1000);
+                };
+            }
+            
+            setupKeyboardNavigation() {
+                // Tab trapping for modals
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Tab') {
+                        const modal = document.querySelector('.modal:not(.hidden)');
+                        if (modal) {
+                            this.trapFocus(e, modal);
+                        }
+                    }
+                });
+            }
+            
+            trapFocus(e, container) {
+                const focusableElements = container.querySelectorAll(
+                    'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+                );
+                const firstElement = focusableElements[0];
+                const lastElement = focusableElements[focusableElements.length - 1];
+                
+                if (e.shiftKey && document.activeElement === firstElement) {
+                    e.preventDefault();
+                    lastElement.focus();
+                } else if (!e.shiftKey && document.activeElement === lastElement) {
+                    e.preventDefault();
+                    firstElement.focus();
+                }
+            }
+            
+            closeModal(modal) {
+                modal.classList.add('hidden');
+                modal.setAttribute('aria-hidden', 'true');
+                
+                // Return focus to the element that opened the modal
+                const trigger = document.querySelector('[data-modal-trigger]');
+                if (trigger) {
+                    trigger.focus();
+                }
+            }
+            
+            setupHighContrastSupport() {
+                // Detect high contrast mode
+                if (window.matchMedia('(prefers-contrast: high)').matches) {
+                    document.body.classList.add('high-contrast');
+                }
+                
+                // Listen for changes
+                window.matchMedia('(prefers-contrast: high)').addEventListener('change', (e) => {
+                    document.body.classList.toggle('high-contrast', e.matches);
+                });
+            }
+        }
+        
+        // Initialize accessibility manager
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                window.accessibilityManager = new AccessibilityManager();
+            });
+        } else {
+            window.accessibilityManager = new AccessibilityManager();
+        }
+    </script>
+</body>
+</html> 

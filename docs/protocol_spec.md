@@ -470,7 +470,7 @@ The protocol is designed for mobile-first gameplay with minimal latency and clea
 
 ### 6.1 Input Sanitization
 - **Codenames**: Alphanumeric + spaces only, 3-15 characters
-- **Banner messages**: Plain text only, 25 character limit, HTML escaped
+- **Banner messages**: Plain text only, 50 character limit, HTML escaped
 - **IP spending**: Cannot exceed current IP, minimum 0
 
 ### 6.2 Game State Integrity

@@ -5,5 +5,5 @@ alwaysApply: true
 ---
 # MOST IMPORTANT INSTRUCTIONS
 - Always refer to the [DEVELOPER_CHECKLIST.md](mdc:DEVELOPER_CHECKLIST.md) and other relevant docs before answering.
-- Always keep [CONDENSED_CHECKLIST.md](mdc:CONDENSED_CHECKLIST.md) up to date by checking off the tasks you completed.
+- Always keep [CONDENSED_CHECKLIST.md](mdc:CONDENSED_CHECKLIST.md) and [DEV_TEAM_ROLES.md](mdc:DEV_TEAM_ROLES.md) up to date by checking off the tasks you completed.
 - Never add your own features without first consulting the user. (this is to avoid "feature creep")

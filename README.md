@@ -556,7 +556,7 @@ The **Biplane Banner** leverages human psychology instead of chance:
 
 1. **Declaration & Entry**
 
-   * In the Defense dropdown, select **Information Warfare (Biplane Banner)**. The IP Slider locks at 2. A text field appears: type up to 25 characters.
+   * In the Defense dropdown, select **Information Warfare (Biplane Banner)**. The IP Slider locks at 2. A text field appears: type up to 50 characters.
 
 2. **Hidden Payment**
 
