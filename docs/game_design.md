@@ -15,7 +15,7 @@ During this phase, all players simultaneously and secretly make their choices fo
 1. **Choose One Offensive Operation**: Players select from a list of available offensive actions, potentially targeting another specific player
 2. **Choose One Defensive Measure**: Players select a defensive action to protect themselves from incoming attacks
 3. **Allocate Intelligence Points (IP)**: Players decide how many IP to spend on enhancing their actions or purchasing equipment
-4. **Banner Message Entry** (if applicable): If a player selected "Information Warfare (Biplane Banner)" as their defense, they type a message (max 25 characters) to be displayed during resolution
+4. **Banner Message Entry** (if applicable): If a player selected "Information Warfare (Biplane Banner)" as their defense, they type a message (max 50 characters) to be displayed during resolution
 5. **Submit Choices**: Each client sends their complete action package to the server via WebSocket
 
 ### Resolution Phase

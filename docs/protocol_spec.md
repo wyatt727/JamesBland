@@ -69,7 +69,7 @@ The protocol is designed for mobile-first gameplay with minimal latency and clea
 - `defenseId`: Selected defensive measure ID (required)
 - `targetCodename`: Target player for offense (null if no target required)
 - `ipToSpend`: IP allocated to enhance actions (0-current IP)
-- `bannerMessage`: Text for Biplane Banner (max 25 chars, only if defense = "informationWarfare")
+- `bannerMessage`: Text for Biplane Banner (max 50 chars, only if defense = "informationWarfare")
 - `gadgetPurchases`: Array of gadget IDs to purchase this turn
 - `gadgetRecharges`: Array of owned gadget IDs to recharge
 

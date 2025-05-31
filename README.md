@@ -304,7 +304,7 @@ Once the match begins, the screen is organized into three horizontal sections:
 
 * **Banner Message Entry**:
 
-  * If you selected **Biplane Banner** as defense, a text field appears. Type a message (max 25 characters), then tap "OK" to store it. Your slider locks at 2 IP automatically.
+  * If you selected **Biplane Banner** as defense, a text field appears. Type a message (max 50 characters), then tap "OK" to store it. Your slider locks at 2 IP automatically.
 
 * **Lock-In Feedback**:
 

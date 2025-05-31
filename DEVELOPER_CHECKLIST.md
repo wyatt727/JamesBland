@@ -92,7 +92,7 @@ Create a folder named `docs/` at the project root. Inside `docs/`, create these 
        1. Players choose one **Offensive Operation** (optionally targeting another player).
        2. Players choose one **Defensive Measure** to protect themselves.
        3. Players decide how many **Intelligence Points (IP)** to commit (0 up to their current IP).
-       4. If they selected “Information Warfare (Biplane Banner),” they also type a short message (max 25 characters) to be flown overhead.
+       4. If they selected “Information Warfare (Biplane Banner),” they also type a short message (max 50 characters) to be flown overhead.
        5. Each client sends these choices to the server (via WebSocket).
      * **Resolution Phase**
 
